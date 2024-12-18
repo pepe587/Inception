@@ -1,0 +1,43 @@
+version: '3.9'
+
+services:
+  nginx:
+    build:
+      context: 'requirements/nginx/'
+    container_name: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./volumes/default.conf:/etc/nginx/default.conf
+      - ./volumes/html:/usr/share/nginx/html
+    networks:
+      - default-network
+  
+  mariadb:
+    build:
+      context: 'requirements/mariadb/'
+    container_name: mariadb
+    volumes:
+      - mariadb_data:/var/lib/mysql:rw
+    ports:
+      - "3306:3306"
+    networks:
+      - default-network
+
+
+  wordpress:
+    build:
+      context: 'requirements/wordpress/'
+    container_name: wordpress
+    volumes:
+      - wordpress_files:/var/www/html
+    networks:
+      - default-network
+
+networks:
+  default-network:
+    driver: bridge
+
+volumes:
+  mariadb_data:
+  wordpress_files:
